@@ -1,5 +1,5 @@
 /*Find median of a given linked list (Sorted Linked List)*/
-/*#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
 #include<stdlib.h>
 struct node
@@ -71,4 +71,4 @@ void main()
 		p = insert(p, no);
 	}
 	median(p);
-}*/
+}
