@@ -33,55 +33,102 @@ struct node * insert(struct node *p, int no)
 	return p;
 }
 
-struct node* add(struct node *first, struct node* second)
+struct node* add(struct node *first, struct node* second, int cou1, int cou2)
 {
-	struct node *temp = NULL;
+	struct node *temp = (struct node*)malloc(sizeof(struct node)), *result = NULL;
+	int t = cou1 - cou2;;
+	if (cou1 > cou2)
+	{
+		while (t > 0)
+		{
+			result = insert(result, first->data);
+			first = first->link;
+			t--;
+		}
+	}
+	else
+	{
+		t = -t;
+		while (t > 0)
+		{
+			result = insert(result, second->data);
+			second = second->link;
+			t--;
+		}
+	}
+	temp = result;
+	if (temp != NULL)
+	{
+		while (temp->link != NULL&&temp != NULL)
+		{
+			if (temp->link->data < 9)
+				temp = temp->link;
+			else
+				break;
+		}
+	}
 	while (first != NULL && second != NULL)
 	{
-		temp = insert(temp, first->data + second->data);
+		if ((first->data + second->data)<9)
+		{
+			result = insert(result, first->data + second->data);
+			if (temp == NULL)
+				temp = result;
+			else
+				temp = temp->link;
+		}
+		else if ((first->data + second->data) == 9)
+		{
+			result = insert(result, first->data + second->data);
+			if (temp == NULL)
+				temp = result;
+		}
+		else
+		{
+			result = insert(result, (first->data + second->data) % 10);
+			if (temp == NULL)
+				temp = result;
+			while (temp->link != NULL&&temp != NULL)
+			{
+				if (temp->data == 9)
+					temp->data = 0;
+				else
+					temp->data += 1;
+				temp = temp->link;
+			}
+			if (result->data <= 9)
+				temp = temp->link;
+		}
 		first = first->link;
 		second = second->link;
 	}
-	if (first != NULL)//if first list is larger than second
-	{
-		while (first != NULL)
-		{
-			temp = insert(temp, first->data);
-			first = first->link;
-		}
-	}
-	if (second != NULL)//if first list is smaller than second
-	{
-		while (second != NULL)
-		{
-			temp = insert(temp, second->data);
-			second = second->link;
-		}
-	}
-	return temp;
+	return result;
 }
 
 void main()
 {
 	int no = 1;
 	struct node *first, *second, *result, *temp;
+	int fcount = 0, scount = 0;
 	first = NULL;
 	second = NULL;
 	result = NULL;
-	printf("Enter list1");
+	printf("Enter list1 ");
 	while (no != 0)
 	{
 		scanf("%d", &no);
 		first = insert(first, no);
+		fcount++;
 	}
 	no = 1;
-	printf("Enter list2");
+	printf("Enter list2 ");
 	while (no != 0)
 	{
 		scanf("%d", &no);
 		second = insert(second, no);
+		scount++;
 	}
-	result = add(first, second);
+	result = add(first, second, fcount, scount);
 	temp = result;
 	printf("Resultant list is ");
 	while (temp != NULL)
@@ -89,4 +136,5 @@ void main()
 		printf("%d ", temp->data);
 		temp = temp->link;
 	}
+	scanf("%d", &no);
 }
